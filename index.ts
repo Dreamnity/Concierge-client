@@ -1,9 +1,9 @@
 import EventEmitter from "events";
 
 class ConciergeClient extends EventEmitter {
-	constructor(name: string) {
+	constructor(name: string, server: string="https://cc.hop.sh") {
 		super();
-		this.socket = new WebSocket("https://cc.hop.sh");
+		this.socket = new WebSocket(server);
 		this.socket.onopen = () => {
 			this.socket.onmessage = (message: MessageEvent) => {
 				let data = JSON.parse(message.data);
@@ -29,11 +29,4 @@ class ConciergeClient extends EventEmitter {
 		this.#send({ target, message });
 	}
 }
-const client = new ConciergeClient("test");
-client.on("open", () => {
-	console.log("connected");
-	client.send("test2", "hi");
-});
-client.on("message", console.log);
-client.on("error", console.error);
-client.on("close", () => console.log("closed"));
+export default ConciergeClient;
